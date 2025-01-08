@@ -1,22 +1,35 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
 import { GenresModule } from './genres/genres.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type:'postgres',
-    host:'127.0.0.1',
-    port :5433,
-    username:'postgres',
-    password:'123456',
-    database:'librarydb',
-    autoLoadEntities:true,
-    synchronize:true,
-  }), AuthorsModule, BooksModule, GenresModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Makes the config globally available
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule], // Import ConfigModule to access the environment variables
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService], // Inject ConfigService
+    }),
+    AuthorsModule,
+    BooksModule,
+    GenresModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
