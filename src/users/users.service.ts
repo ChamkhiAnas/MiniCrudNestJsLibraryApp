@@ -1,19 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SerializedUser, User } from './types/User';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
+
+  private users:User[]=[
+      {
+        username: "user1",
+        password: "password1"
+      },
+      {
+        username: "user2",
+        password: "password2"
+      },
+      {
+        username: "user3",
+        password: "password3"
+      },
+      {
+        username: "user4",
+        password: "password4"
+      },
+      {
+        username: "user5",
+        password: "password5"
+      }
+    
+  ]
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.users.map((user)=>plainToClass(SerializedUser,user))
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(username: string) {
+    const user = this.users.find((item)=>item.username==username)
+    return plainToClass(SerializedUser,user)
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
