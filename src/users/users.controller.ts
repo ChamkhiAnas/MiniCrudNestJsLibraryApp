@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersInterceptor } from './interceptors/user.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -13,7 +14,9 @@ export class UsersController {
   }
 
   @Get()
+  @UseInterceptors(UsersInterceptor)
   findAll() {
+    console.log("inside users get")
     return this.usersService.findAll()
   }
 
