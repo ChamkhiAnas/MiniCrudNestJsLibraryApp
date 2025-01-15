@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersInterceptor } from './interceptors/user.interceptor';
 import { UserErrorInterceptor } from './interceptors/error.interceptor';
 import { LogginInterceptor } from './interceptors/logging.interceptor';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -18,7 +19,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseInterceptors(LogginInterceptor)
+  @UseGuards(AuthGuard)
   findAll() {
     return this.usersService.findAll()
   }
