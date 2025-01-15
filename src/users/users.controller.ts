@@ -10,7 +10,6 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { RoleGuard } from 'src/guards/roles.guard';
 
 @Controller('users')
-@UseGuards(AuthGuard)
 
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -25,11 +24,13 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   findAll() {
     return this.usersService.findAll()
   }
-
+  @UseGuards(RoleGuard)
   @Get(':username')
+  @Roles(['user'])
   findOne(@Param('username') username: string) {
     return this.usersService.findOne(username)
   }

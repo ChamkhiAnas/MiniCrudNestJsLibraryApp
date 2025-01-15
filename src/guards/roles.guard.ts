@@ -9,11 +9,20 @@ export class RoleGuard implements CanActivate{
 
     constructor(private reflector:Reflector){}
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        context.switchToHttp().getRequest<Request>()
-        // const request=context.switchToHttp().getRequest()
-        const requiredRoles=this.reflector.get(Roles,context.getHandler());
-        console.log('Inside ROle guard',requiredRoles)
+        
+        const requiredRoles = this.reflector.get(Roles, context.getHandler());
+        
 
-        return true
+        if (!requiredRoles) {
+            return true; // No roles required for this route
+        }
+
+
+        const request=context.switchToHttp().getRequest();
+        const user=request.user;
+
+
+        return requiredRoles.some(role=>user?.roles.includes(role))
+
     }
 }
