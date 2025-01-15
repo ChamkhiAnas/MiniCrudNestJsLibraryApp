@@ -6,10 +6,16 @@ import { UsersInterceptor } from './interceptors/user.interceptor';
 import { UserErrorInterceptor } from './interceptors/error.interceptor';
 import { LogginInterceptor } from './interceptors/logging.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RoleGuard } from 'src/guards/roles.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard)
+
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+
 
   @Post()
   @UseInterceptors(UserErrorInterceptor)
@@ -19,7 +25,6 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll() {
     return this.usersService.findAll()
   }

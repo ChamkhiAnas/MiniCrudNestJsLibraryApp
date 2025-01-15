@@ -10,23 +10,32 @@ export class UsersService {
   private users:User[]=[
       {
         username: "user1",
-        password: "password1"
+        password: "password1",
+        role:"admin"
       },
       {
         username: "user2",
-        password: "password2"
+        password: "password2",
+        role:"user"
+
       },
       {
         username: "user3",
-        password: "password3"
+        password: "password3",
+        role:"user"
+
       },
       {
         username: "user4",
-        password: "password4"
+        password: "password4",
+        role:"user"
+
       },
       {
         username: "user5",
-        password: "password5"
+        password: "password5",
+        role:"admin"
+
       }
     
   ]
